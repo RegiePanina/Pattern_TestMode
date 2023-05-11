@@ -6,6 +6,7 @@ import io.restassured.filter.log.LogDetail;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import lombok.Value;
+import lombok.val;
 
 import java.util.Locale;
 
@@ -20,19 +21,17 @@ public class DataGenerator {
             .log(LogDetail.ALL)
             .build();
     private static final Faker faker = new Faker(new Locale("en"));
-
     private DataGenerator() {
     }
-
     private static void sendRequest(RegistrationDto user) {
         given() // "дано"
                 .spec(requestSpec)
-                .body(new RegistrationDto("vasya", "password", "active"))
+                .body(user)
+                //.body(new RegistrationDto("vasya", "password", "active"))
                 .when()
                 .post("/api/system/users")
-                .then() // "тогда ожидаем"
+                .then()
                 .statusCode(200);
-
     }
 
     public static String getRandomLogin() {
@@ -57,7 +56,7 @@ public class DataGenerator {
         }
 
         public static RegistrationDto getRegisteredUser(String status) {
-            var registeredUser = getUser(status);
+            val registeredUser = getUser(status);
             sendRequest(registeredUser);
             return registeredUser;
         }
